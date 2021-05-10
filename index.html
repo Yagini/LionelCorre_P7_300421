@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous" />
+    <link rel="stylesheet" href="./style/all.css" />
+    <link rel="stylesheet" href="./style/style.css" />
+    <title>Les petits plats</title>
+  </head>
+  <body>
+    <div class="container">
+      <header class="header">
+        <a href="index.html" aria-label="Les petits plats" class="header__link">
+          <img
+            src="./style/image/logo.png"
+            alt="Les petits plats logo"
+            class="header__logo"
+          />
+        </a>
+        <form action="" method="POST" class="row search" id="search">
+          <input
+            type="search"
+            class="col"
+            id="search__bar"
+            name="Barre de recherche principale"
+            placeholder="Rechercher un ingrédient, appareil, ustensiles ou une recette"
+            aria-label="Search through site content"
+          />
+          <button
+            type="submit"
+            title="Rechercher"
+            class="search__button"
+            id="search__button"
+          >
+            <i class="fas fa-search"></i>
+          </button>
+        </form>
+
+        <div></div>
+
+        <form action="" method="POST" class="row filters" id="filters">
+          <div
+            class="col filters__element filters__element--ingredient"
+            id="ingredient__element"
+          >
+            <input
+              type="text"
+              placeholder="Ingrédients"
+              id="ingredient__input"
+            />
+            <span class="fas fa-chevron-down" id="ingredient__btn"></span>
+            <div class="filters__all">
+              <ul id="ingredients-filter-list"></ul>
+            </div>
+          </div>
+
+          <div
+            class="col filters__element filters__element--device"
+            id="device__element"
+          >
+            <input type="text" placeholder="Appareils" id="device__input" />
+            <span class="fas fa-chevron-down" id="device__btn"></span>
+            <div class="filters__all">
+              <ul id="devices__filter-list"></ul>
+            </div>
+          </div>
+
+          <div
+            class="col filters__element filters__element--ustensils"
+            id="ustensils__element"
+          >
+            <input type="text" placeholder="Ustensiles" id="ustensils__input" />
+            <span class="fas fa-chevron-down" id="ustensils__btn"></span>
+            <div class="filters__all">
+              <ul id="ustensils__filter-list"></ul>
+            </div>
+          </div>
+        </form>
+      </header>
+      <main class="media__content" id="media__content">
+        <article class="media__bloc">
+          <a href="" class="media__link">
+            <img src="" alt="" class="media__image" />
+          </a>
+          <section class="media__recipe">
+            <div class="media__heading">
+              <h2 class="media__title">Limonade de Coco</h2>
+              <p class="media__cooking-timer">10 min</p>
+            </div>
+            <div class="media__task">
+              <ul class="media__ingredients">
+                <li>lait de coco : 400ml</li>
+                <li>jus de citron : 2</li>
+                <li>Créme de coco : 4 c</li>
+                <li>sucre : 20g</li>
+                <li>Glaçons : 2</li>
+              </ul>
+              <p class="media__cooking--instruction">
+                Mettre les glaçons à votre goût dans le blender, ajouter le
+                lait, la crème de coco, le jus de 2 citrons et le sucre. Mixer
+                jusqu'à avoir la consistence désirée
+              </p>
+            </div>
+          </section>
+        </article>
+        <!-- Contient tous les médias -->
+      </main>
+    </div>
+    <!--<script src="./js/index.js" type="module"></script>-->
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+      integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

@@ -1,0 +1,14 @@
+:root {
+    --background: #E7E7E7;
+    --img-backgroud: #C7BEBE;
+    --ingredient : #3282F7;
+    --device : #68D9A4;
+    --ustensils : #ED6454;
+} 
+
+@font-face {
+    font-family: "Lato";
+    font-style: normal;
+    font-weight: 400;
+    src: url;
+}
