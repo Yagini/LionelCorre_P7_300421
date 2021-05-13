@@ -1,13 +1,16 @@
-export const createMedia = (data) => {
-  addMedia(data);  
+export const createMedia = (recipes) => {
+  addMedia(recipes);  
 }
 
-const addMedia = (data) => {
-  const mediaContent = document.querySelector(".media__content");
+/*const displayRecipe = () => {
+  // tout ce qui concerne l'affichage des éléments
+}*/ 
 
-  const recipes = data.recipes;
+const addMedia = (recipes) => {
+  const mediaContent = document.querySelector(".media__content"); 
 
   recipes.forEach((recipe) => {
+    
     const mediaBlock = document.createElement("article");
     mediaBlock.classList.add("media__block");    
 
@@ -38,12 +41,14 @@ const addMedia = (data) => {
     mediaTask.classList.add("media__task");
 
     const mediaIngredients = document.createElement("ul");
-    mediaIngredients.classList.add("media__ingredients");
-
+    mediaIngredients.classList.add("media__ingredients");    
+     
     recipe.ingredients.forEach((ingredient) => {
-      const mediaIngredientsList = document.createElement("li");
+      const mediaIngredientsList = document.createElement("li");                
       mediaIngredientsList.classList.add("ingredients__list");
-      mediaIngredientsList.textContent = ingredient.ingredient + " " + ingredient.quantity + " " + ingredient.unit;
+      mediaIngredientsList.innerHTML = `<strong>${ingredient.ingredient}`;
+      mediaIngredientsList.innerHTML += ingredient.quantity ? ` : </strong><span>${ingredient.quantity}` : `</strong>`;
+      mediaIngredientsList.innerHTML += ingredient.unit ? ` ${ingredient.unit}</span>` : `</span>`;   
       mediaIngredients.appendChild(mediaIngredientsList);
     });
 
