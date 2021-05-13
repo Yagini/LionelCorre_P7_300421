@@ -6,12 +6,12 @@
     --ustensils : #ED6454;
 } 
 
-/*@font-face {
+@font-face {
     font-family: "lato-regular";
     font-style: normal;
     font-weight: 400;
     src: url("./font/Lato-Regular.ttf") format("truetype");
-}*/
+}
 @font-face {
     font-family: "lato-bold";
     font-style: bold;
@@ -31,7 +31,7 @@ body {
 }
 
 input {
-    font: 400 1.125rem "lato-bold";
+    font: 400 1.125rem "lato-regular";
 }
 
 /*===========================/
@@ -42,7 +42,6 @@ input {
     align-items: center;
     display: flex;
     justify-content: center;
-    margin-top: 40px;
 }
 
 .header__logo {    
@@ -153,30 +152,19 @@ input {
 }
 
 .media__cooking-timer {
-    flex-direction: row;    
-    align-items: center;
-    text-align: center; 
-    justify-content: space-around; 
-    font-size: 1.125rem;  
+    flex-direction: row;
+    /* align-items: center; */
+    text-align: center;
 }
 
 .media__heading {
    justify-content: space-between;
-   margin-bottom: 20px;
 }
 
 .media__img {
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
     color: var(--img-background);
-}
-
-.media__ingredients, .media__cooking-instruction {
-    font-size: 0.75rem;     
-}
-
-.media__ingredients {
-    margin-bottom: 20px;
 }
 
 .media__recipe {
@@ -186,11 +174,7 @@ input {
     border-bottom-right-radius: 5px;    
 }
 
-.media__title {
-    font-size: 1.125rem;
-    line-height: 1.375rem;    
-    width: 70%;
-}
+
 /*===================================/
 /==           Queries             ==/
 /=================================*/
@@ -214,25 +198,7 @@ input {
 
     .media__block {
         width: 330px;               
-    } 
-
-    .media__ingredients {
-        margin-right: 5px;
-    }
-
-    .media__ingredients, .media__cooking-instruction {
-        width: 171px;
-    }
-
-    .media__cooking-instruction {
-        height: 109px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    .media__task {
-        display: flex;    
-    }    
+    }   
 
 }
 
@@ -240,22 +206,8 @@ input {
 
 @media only screen and (min-width: 1024px) {
     body {
-        width: 850px;        
+        width: 944px;        
     }
-
-    .media__content {        
-        justify-content: space-between;    
-    }
-
-    .media__block {
-        width: 380px; 
-        height: 364px;                             
-    } 
-
-    .media__img {
-        height: 178px;
-    }
-
 } 
 
 /* desktop 1400px et + */
