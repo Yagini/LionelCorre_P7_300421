@@ -9,18 +9,18 @@
     <link rel="stylesheet" href="./style/style.css" />
     <title>Les petits plats</title>
   </head>
-  <body>
+  <body id="body">
     <header class="header">
       <a href="index.html" aria-label="Les petits plats" class="header__link">
         <img src="./style/image/logo.png" alt="Les petits plats logo" class="header__logo" />
       </a>
     </header>
 
-    <form action="" method="POST" class="search" id="search">
+    <form action="" method="POST" class="search" id="search__form">
       <input
         type="search"
         class="search__input"
-        id="search__bar"
+        id="search"
         name="Barre de recherche principale"
         placeholder="Rechercher un ingrédient, appareil, ustensiles ou une recette"
         aria-label="Search through site content"
@@ -30,23 +30,24 @@
       </button>
     </form>
 
-    <div class="tag">coco
-      <i class="far fa-times-circle"></i>
+    <div class="tag">
+      <p class="tag__text"></p>
+      <i class="far fa-times-circle tag__close"></i>
     </div>
 
     <form action="" method="POST" class="filters" id="filters">
-      <div class="filters__element filters__element--ingredients" id="ingredient__element">
+      <div class="filters__element filters__element--ingredients" id="ingredients__element">
         <input type="text" placeholder="Ingrédients" class="filters__input filters__input--ingredients" id="ingredient__input" />
         <i class="fas fa-chevron-down filters__btn" id="ingredient__btn"></i>
-        <div class="filters__all">
+        <div class="filters__all" id="filters__all--ingredients">
           <ul id="ingredients-filter-list"></ul>
         </div>
       </div>
 
       <div class="filters__element filters__element--devices" id="device__element">
         <input type="text" placeholder="Appareils" class="filters__input filters__input--devices" id="device__input" />
-        <i class="fas fa-chevron-down filters__btn" id="device__btn"></i>
-        <div class="filters__all">
+        <i class="fas fa-chevron-down filters__btn" id="devices__btn"></i>
+        <div class="filters__all " id="filters__all--devices">
           <ul id="devices__filter-list"></ul>
         </div>
       </div>
@@ -54,7 +55,7 @@
       <div class="filters__element filters__element--ustensils" id="ustensils__element">
         <input type="text" placeholder="Ustensiles" class="filters__input filters__input--ustensils" id="ustensils__input" />
         <i class="fas fa-chevron-down filters__btn" id="ustensils__btn"></i>
-        <div class="filters__all">
+        <div class="filters__all" id="filters__all--ustensils">
           <ul id="ustensils__filter-list"></ul>
         </div>
       </div>

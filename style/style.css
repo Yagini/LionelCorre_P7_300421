@@ -82,15 +82,26 @@ input {
 /==        tags bars              ==/
 /=================================*/
 
+#filters__all--devices, #filters__all--ingredients, #filters__all--ustensils {
+    display: none;
+    cursor: pointer;
+}
+
 .filters {
     display: flex;
     flex-wrap: wrap;       
     margin-top: 20px;    
 }
 
+.filters__all {
+    width: 340px;
+    margin-top: 20px;   
+}
+
 .filters__element {
     border-radius: 5px;
     display: flex;
+    flex-wrap: wrap;    
     margin-bottom: 20px;
     padding: 24px 15px;  
     width: 340px;  
@@ -108,14 +119,16 @@ input {
     background-color: var(--ustensils);
 }
 
+
 .filters__btn {
     color: #ffffff;
     display: flex;
     align-items: center;
 }
 
-.filters__input {
-    width: 100%;    
+.filters__input {   
+    width: 90%;
+    color: #ffffff;       
 }
 
 .filters__input--ingredients {    
@@ -134,15 +147,21 @@ input {
     color: #ffffff;
 }
 
+.list__devices {
+    color: #ffffff;
+    font-size: 1.125rem;
+    margin-bottom: 10px;
+}
+
 .tag {
     align-items: center;
     border-radius: 5px;
     color: #ffffff;
-    display: flex;
+    display: none;
     justify-content: space-around;
     height: 37px;
     width: 107px;
-    background-color: var(--ingredients);
+    /*background-color: var(--ingredients);*/
     
 }
 
@@ -188,19 +207,19 @@ input {
 }
 
 .media__cooking-instruction {
-    font-family: "roboto-regular";
+    font-family: "roboto-regular";    
 }
 
 .media__ingredients {
-    margin-bottom: 20px;
+    margin-bottom: 20px;    
 }
 
 .media__recipe {
     background-color: var(--background);
-    padding: 20px;
     border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px;    
-}
+    border-bottom-right-radius: 5px;        
+    padding: 20px;
+} 
 
 .media__title {
     font-size: 1.125rem;
@@ -238,16 +257,19 @@ input {
 
     .media__ingredients, .media__cooking-instruction {
         width: 171px;
-    }
-
-    .media__cooking-instruction {
         height: 109px;
         overflow: hidden;
-        text-overflow: ellipsis;
+        text-overflow: ellipsis;       
+    }    
+
+    .media__recipe {
+        height: 190px;        
     }
 
     .media__task {
-        display: flex;    
+        display: flex; 
+        overflow: hidden;
+        text-overflow: ellipsis;         
     }    
 
 }
