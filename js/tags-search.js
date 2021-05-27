@@ -1,11 +1,3 @@
-//const ingredientInput = document.getElementById("ingredient__input");
-//const ingredientBtn = document.getElementById("ingredients__btn");
-//const ingredientFilterList = document.getElementById("ingredients-filter-list");
-
-//const tagClose = document.getElementsByClassName("tag__close");
-
-const deviceFilterList = document.getElementById("devices__filter-list");
-
 // Créer la liste des ingrédients à partir du recipe
 // quand on tape dans l'input filtre les ingrédients
 
@@ -13,8 +5,10 @@ const deviceFilterList = document.getElementById("devices__filter-list");
 // au clic sur un ingrédient l'ajoute au tag list
 
 export const TagSearch = (recipes) => {
+  const applianceListWithoutDuplicate = createApplianceList(recipes);
+  const ustensilsListWithoutDuplicate = createUstensilsList(recipes);
   // Fontion qui gère les Set de tag
-  addTagSet(recipes);
+  addTagSet(applianceListWithoutDuplicate, ustensilsListWithoutDuplicate);
 
   // fonction qui permet l'action sur les button
   addButtonAction();
@@ -23,7 +17,21 @@ export const TagSearch = (recipes) => {
   addTagFilter();
 
   // fonction qui gère l'entrée dans les champs input
-  addSearchInput(recipes);
+  addSearchInput(applianceListWithoutDuplicate);
+};
+
+const createApplianceList = (recipes) => {
+  const appliancesList = recipes.reduce((acc, el) => {
+    return acc.add(el.appliance);
+  }, new Set());
+  return [...appliancesList];
+};
+
+const createUstensilsList = (recipes) => {
+  const ustensilsList = recipes.reduce((acc, el) => {
+    return acc.add(el.ustensils);
+  }, new Set());
+  return [...ustensilsList];
 };
 
 /**
@@ -32,19 +40,25 @@ export const TagSearch = (recipes) => {
  * @param {Array} recipes
  */
 
-const addTagSet = (recipes) => {
-  // Build a set with device
-  const deviceList = recipes.reduce((acc, el) => {
-    return acc.add(el.appliance);
-  }, new Set());
-  const deviceListWithoutDuplicate = [...deviceList];
+const addTagSet = (appliances) => {
+  const applianceFilterList = document.getElementById("appliances__filter-list");
+  const ustensilFilterList = document.getElementById("ustensils__filter-list");
+  applianceFilterList.innerHTML = "";
+  ustensilFilterList.innerHTML = "";
 
-  for (const device of deviceListWithoutDuplicate) {
-    const devices = document.createElement("li");
-    devices.classList.add("list__devices");
-    deviceFilterList.appendChild(devices);
-    devices.innerHTML = device;
-  }
+  appliances.forEach((appliance) => {
+    const appliancesList = document.createElement("li");
+    appliancesList.classList.add("appliances__list");
+    applianceFilterList.appendChild(appliancesList);
+    appliancesList.textContent = appliance;
+  });
+
+  /*for (const ustensil of ustensils) {
+    const ustensils = document.createElement("li");
+    ustensils.classList.add("ustensils__list");
+    ustensilFilterList.appendChild(ustensils);
+    ustensils.textContent = ustensil;
+  }*/
 };
 
 /**
@@ -53,67 +67,90 @@ const addTagSet = (recipes) => {
  */
 
 const addButtonAction = () => {
-  const devicesBtn = document.getElementById("devices__btn");
-  const devicesFilters = document.getElementById("filters__all--devices");
-  devicesBtn.addEventListener("click", () => {
-    if (devicesFilters.style.display === "none") {
-      devicesFilters.style.display = "block";
+  const appliancesBtn = document.getElementById("appliances__btn");
+  const appliancesFilters = document.getElementById("filters__all--appliances");
+  appliancesBtn.addEventListener("click", () => {
+    if (appliancesFilters.style.display === "none") {
+      appliancesFilters.style.display = "block";
     } else {
-      devicesFilters.style.display = "none";
+      appliancesFilters.style.display = "none";
     }
   });
   /*const ingredientBtn = document.getElementById("ingredients__btn");
   const ingredientFilters = document.getElementById("filters__all--ingredients");
   ingredientBtn.addEventListener("click", () => {
-    if (devicesFilters.style.display === "none") {
+    if (appliancesFilters.style.display === "none") {
       ingredientFilters.style.display = "block";
     } else {
       ingredientFilters.style.display = "none";
     }
-  });
+  });*/
   const ustensilsBtn = document.getElementById("ustensils__btn");
   const ustensilsFilters = document.getElementById("filters__all--ustensils");
   ustensilsBtn.addEventListener("click", () => {
-    if (devicesFilters.style.display === "none") {
+    if (ustensilsFilters.style.display === "none") {
       ustensilsFilters.style.display = "block";
     } else {
       ustensilsFilters.style.display = "none";
     }
-  });*/
-};
-
-/**
- * Fonction pour l'ajout des tags au click dans la barre de tag
- * et ferme les tags aux clics
- */
-
-const addTagFilter = () => { 
-  createTag()
-  tagClose()
-};
-
-const createTag = () => {
-  const devicesList = document.querySelector(".list__devices"); 
-  const tag = document.querySelector(".tag");
-  const tagText = document.querySelector(".tag__text");
-  devicesList.addEventListener("click", () => {   
-    const devicesText = devicesList.innerHTML;
-    console.log(devicesText);
-    tag.style.display = "flex";
-    tag.style.backgroundColor = "#68D9A4";
-    tagText.textContent = devicesText;       
   });
 };
 
-const tagClose = () => {
-  const tag = document.querySelector(".tag");
-  const tagButton = document.querySelector(".tag__close")
-  tagButton.addEventListener("click", () => {
+/**
+ * Fonction pour l'ajout des tags aux clics dans la barre de tag
+ * et ferme les tags aux clics
+ */
+
+const addTagFilter = () => {
+  createTag();
+  
+};
+
+const createTag = () => {
+  const appliancesList = document.querySelectorAll(".appliances__list");
+  const ustensilslist = document.querySelectorAll(".ustensils__list");
+
+  appliancesList.forEach((appliance) => {
+    console.log(appliance);
+    appliance.addEventListener("click", () => {
+      createTagDisplay(appliance, "tag--appliances");
+    });         
+  });
+
+  /*ustensilslist.forEach((ustensil) => {
+    console.log(ustensil);
+    ustensil.addEventListener("click", () => {
+      createTagDisplay(ustensil);
+      const ustensilText = ustensil.textContent;
+      const tagElement = document.getElementById("tag");
+      const tagText = document.getElementById("tag__text");
+      tagText.textContent = ustensilText;
+      tagElement.style.display = "flex";
+      tagElement.style.backgroundColor = "#68D9A4";
+      tagClose();
+    });
+  });*/
+};
+
+const createTagDisplay = (item, className) => {
+  const appliancesText = item.textContent;
+  const tagList = document.querySelector(".tag__list");
+  const tag = document.createElement("div");
+  tag.classList.add("tag", className);
+  tag.setAttribute("id", "tag");
+  const tagText = document.createElement("p");
+  tagText.classList.add("tag__text");
+  tagText.setAttribute("id", "tag__text");
+  tagText.textContent = appliancesText;
+  const tagIcon = document.createElement("i");
+  tagIcon.classList.add("far", "fa-times-circle", "tag__close");
+  tagIcon.addEventListener("click", () => {
     tag.style.display = "none";
-  })
-}
-
-
+  });
+  tag.appendChild(tagText);
+  tag.appendChild(tagIcon);
+  tagList.appendChild(tag);
+};
 
 /**
  * Fonction qui gère les entrées dans les champs inputs
@@ -121,21 +158,31 @@ const tagClose = () => {
  * @param {Array} recipes
  */
 
-const deviceResults = [];
-const addSearchInput = (recipes) => {
-  console.log(recipes);
-  const deviceInput = document.getElementById("device__input");
-  deviceInput.addEventListener("keyup", () => {
-    if (deviceInput.value.length > 2) {
-      recipes.forEach((device) => {
-        const inputValue = deviceInput.value;
-        const deviceNameValue = device.appliance.toLowerCase().search(inputValue);
-        console.log(deviceNameValue);
-        if (deviceNameValue !== -1) {
-          deviceResults.push(inputValue);
+const applianceResults = [];
+const addSearchInput = (appliances) => {
+  console.log(appliances);
+  const applianceInput = document.getElementById("appliance__input");
+
+  applianceInput.addEventListener("keyup", () => {
+    if (applianceInput.value.length > 2) {
+      //const inputValue = applianceInput.value;
+      /*appliances.forEach((appliance) => {
+        if (appliance.toLowerCase().indexOf(inputValue) === 1) {
+          console.log(appliance);
+          applianceResults.push(appliance);
         }
-        deviceFilterList.innerHTML = " ";
-      });
+      });*/
+      //appliances.filter(appliances.value === inputValue)
+
+    const inputValue = applianceInput.value;
+    appliances.forEach((appliance) => {
+      const applianceNameValue = appliance.toLowerCase().includes(inputValue);
+      console.log(applianceNameValue);
+      if (applianceNameValue !== false) {
+        applianceResults.push(appliance);
+      }
+    });
+    addTagSet(applianceResults);
     }
   });
 };

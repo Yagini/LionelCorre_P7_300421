@@ -2,7 +2,7 @@
     --background: #E7E7E7;
     --img-background: #C7BEBE;
     --ingredients : #3282F7;
-    --devices : #68D9A4;
+    --appliances : #68D9A4;
     --ustensils : #ED6454;
 } 
 
@@ -82,9 +82,15 @@ input {
 /==        tags bars              ==/
 /=================================*/
 
-#filters__all--devices, #filters__all--ingredients, #filters__all--ustensils {
+#filters__all--appliances, #filters__all--ingredients, #filters__all--ustensils {
     display: none;
     cursor: pointer;
+}
+
+.appliances__list {
+    color: #ffffff;
+    font-size: 1.125rem;
+    margin-bottom: 10px;
 }
 
 .filters {
@@ -111,14 +117,13 @@ input {
     background-color: var(--ingredients);
 }
 
-.filters__element--devices {
-    background-color: var(--devices);
+.filters__element--appliances {
+    background-color: var(--appliances);
 }
 
 .filters__element--ustensils {
     background-color: var(--ustensils);
 }
-
 
 .filters__btn {
     color: #ffffff;
@@ -135,8 +140,8 @@ input {
     background-color: var(--ingredients);    
 }
 
-.filters__input--devices {    
-    background-color: var(--devices);    
+.filters__input--appliances {    
+    background-color: var(--appliances);    
 }
 
 .filters__input--ustensils {    
@@ -147,22 +152,20 @@ input {
     color: #ffffff;
 }
 
-.list__devices {
-    color: #ffffff;
-    font-size: 1.125rem;
-    margin-bottom: 10px;
-}
-
-.tag {
+.tag {    
     align-items: center;
     border-radius: 5px;
     color: #ffffff;
-    display: none;
+    display: flex;
     justify-content: space-around;
     height: 37px;
     width: 107px;
-    /*background-color: var(--ingredients);*/
-    
+    background-color: var(--ingredients);  
+}
+
+
+.tag--appliances {
+    background-color: var(--appliances);
 }
 
 /*===================================/
