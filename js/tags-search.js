@@ -1,64 +1,90 @@
-// Créer la liste des ingrédients à partir du recipe
-// quand on tape dans l'input filtre les ingrédients
-
-// au clic sur le chevron ouvre la liste des ingrédients
-// au clic sur un ingrédient l'ajoute au tag list
-
 export const TagSearch = (recipes) => {
-  const applianceListWithoutDuplicate = createApplianceList(recipes);
-  const ustensilsListWithoutDuplicate = createUstensilsList(recipes);
+  const appliancesList = createApplianceList(recipes);
+  const ustensilsList = createUstensilsList(recipes);
+  const ingredientsList = createIgredientsList(recipes);
   // Fontion qui gère les Set de tag
-  addTagSet(applianceListWithoutDuplicate, ustensilsListWithoutDuplicate);
+  addTagSet(appliancesList, ustensilsList, ingredientsList);
 
   // fonction qui permet l'action sur les button
   addButtonAction();
 
-  // fonction qui gère la barre des tags
-  addTagFilter();
-
   // fonction qui gère l'entrée dans les champs input
-  addSearchInput(applianceListWithoutDuplicate);
+  filterByType(appliancesList, ustensilsList, ingredientsList);
+
+  // fonction qui gère la barre des tags
+  createTag();
+
+  //tagFilter(recipes, appliancesList)
 };
 
+/**
+ * Fonctions qui créent des nouveaux Set de chaque éléments 
+ * puis les réinjectes dans un nouveau tableau 
+ * @param {array} recipes 
+ * @returns 
+ */
 const createApplianceList = (recipes) => {
-  const appliancesList = recipes.reduce((acc, el) => {
-    return acc.add(el.appliance);
-  }, new Set());
+  const appliancesList = new Set();
+  recipes.forEach((recipe) => {
+    appliancesList.add(recipe.appliance);
+  });
   return [...appliancesList];
 };
 
 const createUstensilsList = (recipes) => {
-  const ustensilsList = recipes.reduce((acc, el) => {
-    return acc.add(el.ustensils);
-  }, new Set());
+  const ustensilsList = new Set();
+  recipes.forEach((recipe) =>
+    recipe.ustensils.forEach((ustensil) => {
+      ustensilsList.add(ustensil);
+    })
+  );
   return [...ustensilsList];
 };
 
+const createIgredientsList = (recipes) => {
+  const ingredientsList = new Set();
+  recipes.forEach((recipe) =>
+    recipe.ingredients.forEach((ingredient) => {
+      ingredientsList.add(ingredient.ingredient);
+    })
+  );
+  return [...ingredientsList];
+};
+
 /**
- * Fonction qui gère la partie des tags
- * qui évite les doublons avec Set()
+ * Fonction qui gère la partie créations des tags
+ * en créant une liste unique pour chaque éléments
  * @param {Array} recipes
  */
 
-const addTagSet = (appliances) => {
+const addTagSet = (appliances, ustensils, ingredients) => {
   const applianceFilterList = document.getElementById("appliances__filter-list");
   const ustensilFilterList = document.getElementById("ustensils__filter-list");
+  const ingredientsFilterList = document.getElementById("ingredients__filter-list");
   applianceFilterList.innerHTML = "";
   ustensilFilterList.innerHTML = "";
+  ingredientsFilterList.innerHTML = "";
 
-  appliances.forEach((appliance) => {
+  for (const appliance of appliances) {
     const appliancesList = document.createElement("li");
     appliancesList.classList.add("appliances__list");
     applianceFilterList.appendChild(appliancesList);
     appliancesList.textContent = appliance;
-  });
-
-  /*for (const ustensil of ustensils) {
+  }
+  
+  for (const ustensil of ustensils) {
     const ustensils = document.createElement("li");
     ustensils.classList.add("ustensils__list");
     ustensilFilterList.appendChild(ustensils);
     ustensils.textContent = ustensil;
-  }*/
+  }
+
+  for (const ingredient of ingredients) {
+    const ingredients = document.createElement("li");
+    ingredients.classList.add("ingredients__list");
+    ingredientsFilterList.appendChild(ingredients);
+    ingredients.textContent = ingredient;
+  }
 };
 
 /**
@@ -67,32 +93,46 @@ const addTagSet = (appliances) => {
  */
 
 const addButtonAction = () => {
-  const appliancesBtn = document.getElementById("appliances__btn");
-  const appliancesFilters = document.getElementById("filters__all--appliances");
-  appliancesBtn.addEventListener("click", () => {
-    if (appliancesFilters.style.display === "none") {
-      appliancesFilters.style.display = "block";
-    } else {
-      appliancesFilters.style.display = "none";
-    }
+  const applianceBtnDown = document.getElementById("appliances__btn--down");
+  const applianceBtnUp = document.getElementById("appliances__btn--up");
+  const applianceFilters = document.getElementById("filters__all--appliances");
+  applianceBtnDown.addEventListener("click", () => {
+    applianceFilters.style.display = "block";
+    applianceBtnDown.style.display = "none";
+    applianceBtnUp.style.display = "block";
   });
-  /*const ingredientBtn = document.getElementById("ingredients__btn");
+  applianceBtnUp.addEventListener("click", () => {
+    applianceFilters.style.display = "none";
+    applianceBtnDown.style.display = "block";
+    applianceBtnUp.style.display = "none";
+  });
+
+  const ingredientBtnDown = document.getElementById("ingredients__btn--down");
+  const ingredientBtnUp = document.getElementById("ingredients__btn--up");
   const ingredientFilters = document.getElementById("filters__all--ingredients");
-  ingredientBtn.addEventListener("click", () => {
-    if (appliancesFilters.style.display === "none") {
-      ingredientFilters.style.display = "block";
-    } else {
-      ingredientFilters.style.display = "none";
-    }
-  });*/
-  const ustensilsBtn = document.getElementById("ustensils__btn");
-  const ustensilsFilters = document.getElementById("filters__all--ustensils");
-  ustensilsBtn.addEventListener("click", () => {
-    if (ustensilsFilters.style.display === "none") {
-      ustensilsFilters.style.display = "block";
-    } else {
-      ustensilsFilters.style.display = "none";
-    }
+  ingredientBtnDown.addEventListener("click", () => {
+    ingredientFilters.style.display = "block";
+    ingredientBtnDown.style.display = "none";
+    ingredientBtnUp.style.display = "block";
+  });
+  ingredientBtnUp.addEventListener("click", () => {
+    ingredientFilters.style.display = "none";
+    ingredientBtnDown.style.display = "block";
+    ingredientBtnUp.style.display = "none";
+  });
+
+  const ustensilBtnDown = document.getElementById("ustensils__btn--down");
+  const ustensilBtnUp = document.getElementById("ustensils__btn--up");
+  const ustensilFilters = document.getElementById("filters__all--ustensils");  
+  ustensilBtnDown.addEventListener("click", () => {
+    ustensilFilters.style.display = "block";
+    ustensilBtnDown.style.display = "none";
+    ustensilBtnUp.style.display = "block";    
+  });
+  ustensilBtnUp.addEventListener("click", () => {
+    ustensilFilters.style.display = "none";
+    ustensilBtnDown.style.display = "block";
+    ustensilBtnUp.style.display = "none";
   });
 };
 
@@ -101,39 +141,42 @@ const addButtonAction = () => {
  * et ferme les tags aux clics
  */
 
-const addTagFilter = () => {
-  createTag();
+const createTag = () => {
+  const appliancesList = document.querySelectorAll(".appliances__list");
+  const ustensilsList = document.querySelectorAll(".ustensils__list");
+  const ingredientsList = document.querySelectorAll(".ingredients__list");  
+
+  appliancesList.forEach((appliance) => {
+    appliance.addEventListener("click", () => {
+      createTagDisplay(appliance, "tag--appliances");
+      appliance.classList.add("list--disabled");
+    });
+  });
+
+  ustensilsList.forEach((ustensil) => {
+    ustensil.addEventListener("click", () => {
+      createTagDisplay(ustensil, "tag--ustensils");
+      ustensil.classList.add("list--disabled");      
+    });
+  });  
+
+  ingredientsList.forEach((ingredient) => {
+    ingredient.addEventListener("click", () => {
+      createTagDisplay(ingredient, "tag--ingredients");
+      ingredient.classList.add("list--disabled");
+    });
+  });  
   
 };
 
-const createTag = () => {
-  const appliancesList = document.querySelectorAll(".appliances__list");
-  const ustensilslist = document.querySelectorAll(".ustensils__list");
-
-  appliancesList.forEach((appliance) => {
-    console.log(appliance);
-    appliance.addEventListener("click", () => {
-      createTagDisplay(appliance, "tag--appliances");
-    });         
-  });
-
-  /*ustensilslist.forEach((ustensil) => {
-    console.log(ustensil);
-    ustensil.addEventListener("click", () => {
-      createTagDisplay(ustensil);
-      const ustensilText = ustensil.textContent;
-      const tagElement = document.getElementById("tag");
-      const tagText = document.getElementById("tag__text");
-      tagText.textContent = ustensilText;
-      tagElement.style.display = "flex";
-      tagElement.style.backgroundColor = "#68D9A4";
-      tagClose();
-    });
-  });*/
-};
+/**
+ * Fonction de création du template pour les tags qui sont épinglés
+ * @param {array} item 
+ * @param {string} className 
+ */
 
 const createTagDisplay = (item, className) => {
-  const appliancesText = item.textContent;
+  const itemText = item.textContent;
   const tagList = document.querySelector(".tag__list");
   const tag = document.createElement("div");
   tag.classList.add("tag", className);
@@ -141,7 +184,7 @@ const createTagDisplay = (item, className) => {
   const tagText = document.createElement("p");
   tagText.classList.add("tag__text");
   tagText.setAttribute("id", "tag__text");
-  tagText.textContent = appliancesText;
+  tagText.textContent = itemText;
   const tagIcon = document.createElement("i");
   tagIcon.classList.add("far", "fa-times-circle", "tag__close");
   tagIcon.addEventListener("click", () => {
@@ -158,54 +201,53 @@ const createTagDisplay = (item, className) => {
  * @param {Array} recipes
  */
 
-const applianceResults = [];
-const addSearchInput = (appliances) => {
-  console.log(appliances);
+const filterByType = (appliances, ustensils, ingredients) => {
   const applianceInput = document.getElementById("appliance__input");
-
-  applianceInput.addEventListener("keyup", () => {
-    if (applianceInput.value.length > 2) {
-      //const inputValue = applianceInput.value;
-      /*appliances.forEach((appliance) => {
-        if (appliance.toLowerCase().indexOf(inputValue) === 1) {
-          console.log(appliance);
-          applianceResults.push(appliance);
-        }
-      });*/
-      //appliances.filter(appliances.value === inputValue)
-
-    const inputValue = applianceInput.value;
-    appliances.forEach((appliance) => {
-      const applianceNameValue = appliance.toLowerCase().includes(inputValue);
-      console.log(applianceNameValue);
-      if (applianceNameValue !== false) {
-        applianceResults.push(appliance);
-      }
-    });
-    addTagSet(applianceResults);
-    }
-  });
+  const ustensilInput = document.getElementById("ustensil__input");
+  const ingredientInput = document.getElementById("ingredient__input");
+  applianceInput.addEventListener("keyup", () =>
+    addTagSet(applianceFilter(appliances, applianceInput.value.toLowerCase()))
+  )
+  ustensilInput.addEventListener("keyup", () =>
+    addTagSet(ustensilFilter(ustensils, ustensilInput.value.toLowerCase()))
+  )
+  ingredientInput.addEventListener("keyup", () =>
+    addTagSet(ingredientFilter(ingredients, ustensilInput.value.toLowerCase()))
+  );
 };
 
-/**/
+const applianceFilter = (appliances, input) => {
+  const filter = appliances.filter((appliance) => {
+    return appliance.toLowerCase().includes(input);
+  });
+  return filter;
+};
 
-/*const ingredientsSet = new Set()
-    recipes.ingredients.forEach((recipe) => {        
-        //recipe.ingredients.forEach( (ingredient) => {
-            ingredientsSet.add(recipe);
-        //});
-        console.log(ingredientsSet)        
-    });  
-    
-    ingredientsSet.forEach(() => {
-        const ingredients = document.createElement("li");
-        ingredients.classList.add("ingredients");
-        ingredientFilterList.appendChild(ingredients);
-        ingredients.innerHTML = ingredientsSet
-    });*/
-/*ingredientsSet.forEach(() => {
-        const ingredients = document.createElement("li");
-        ingredients.classList.add("ingredients");
-        ingredientFilterList.appendChild(ingredients);
-        ingredients.innerHTML = ingredientsSet
-    });*/
+const ustensilFilter = (ustensils, input) => {
+  const filter = ustensils.filter((ustensil) => {
+    return ustensil.toLowerCase().includes(input);
+  });
+  return filter;
+};
+
+const ingredientFilter = (ingredients, input) => {
+  const filter = ingredients.filter((ingredient) => {
+    return ingredient.toLowerCase().includes(input);
+  });
+  return filter;
+};
+
+// Fontion qui trie les dropdowns quand on tape dans la barre de recherche principale
+/*const tagFilter = (recipes, appliances) => {
+  const searchInput = document.getElementById("search");
+  searchInput.addEventListener("keyup", () => filterByType(getResults(recipes, appliances.value.toLowerCase())));
+}
+
+const getResults = (recipes, input) => {     
+  const filteredMedia = recipes.filter((recipe) => {
+    return(
+      recipe.appliance.toLowerCase().includes(input)  
+    )    
+  });
+  return filteredMedia;  
+};*/

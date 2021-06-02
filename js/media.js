@@ -1,11 +1,8 @@
-//import { recipes } from "./recipes";
-//const searchInput = document.getElementById("search");
-
-
 export const createMedia = (recipes) => {
   addMedia(recipes);
-  search(recipes);
-  //search2(recipes);
+  //search(recipes);
+  search2(recipes);
+  
 };
 
 const addMedia = (recipes) => {
@@ -84,7 +81,7 @@ const addMedia = (recipes) => {
  */
 
 
-const search = (recipes) => {
+/*const search = (recipes) => {
   const searchInput = document.getElementById('search');  
   searchInput.addEventListener('keyup', () => addMedia(getResults(recipes, searchInput.value.toLowerCase())));
 };
@@ -100,33 +97,27 @@ const getResults = (recipes, input) => {
     for (let j = 0; j < ingredients.length; j++)
       if (ingredients[j].ingredient.toLowerCase().includes(input)) {
         isInIngredients = true;
-        break;
       }
     if (isInName || isInDescription || isInIngredients) results.push(recipes[i]);
   }
   return results;
+};*/
+
+const search2 = (recipes) => {
+  const searchInput = document.getElementById("search");
+  searchInput.addEventListener("keyup", () => addMedia(getResults(recipes, searchInput.value.toLowerCase())));
+}
+
+const getResults = (recipes, input) => {  
+  if (input.length < 3) return recipes;  
+  const filteredMedia = recipes.filter((recipe) => {
+    return(
+      recipe.name.toLowerCase().includes(input) || 
+      recipe.description.toLowerCase().includes(input) ||
+      recipe.ingredients.some((ingredient) => ingredient.ingredient.toLowerCase().includes(input))
+    )    
+  });
+  return filteredMedia;  
 };
 
-
-/*const search2 = (recipes) => {  
-  const searchInput = document.getElementById("search");
-  searchInput.addEventListener("keyup", () => {
-    const inputValue = searchInput.value.toLowerCase();
-    if (inputValue.length > 2) {
-      const filteredMedia = recipes.filter((recipe) => {
-        return (
-          recipe.name.toLowerCase().includes(inputValue) || 
-          recipe.description.toLowerCase().includes(inputValue) ||
-          recipe.ingredients.some((ingredient) => ingredient.ingredient.toLowerCase().includes(inputValue))          
-        )          
-      });
-      document.getElementById("media__content").innerHTML = "";
-      addMedia(filteredMedia);
-    } else if (searchInput.value.length < 3) {
-      results = [];
-      document.getElementById("media__content").innerHTML = "";
-      addMedia(recipes);
-    }
-  });
-};*/
 

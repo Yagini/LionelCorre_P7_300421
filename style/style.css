@@ -6,12 +6,12 @@
     --ustensils : #ED6454;
 } 
 
-/*@font-face {
+@font-face {
     font-family: "lato-regular";
     font-style: normal;
     font-weight: 400;
     src: url("./font/Lato-Regular.ttf") format("truetype");
-}*/
+}
 @font-face {
     font-family: "lato-bold";
     font-style: bold;
@@ -85,15 +85,17 @@ input {
 #filters__all--appliances, #filters__all--ingredients, #filters__all--ustensils {
     display: none;
     cursor: pointer;
-}
-
-.appliances__list {
-    color: #ffffff;
+    color: #ffffff;    
     font-size: 1.125rem;
     margin-bottom: 10px;
 }
 
+#appliances__btn--up, #ingredients__btn--up, #ustensils__btn--up {
+    display: none;
+}
+
 .filters {
+    align-items: flex-start;
     display: flex;
     flex-wrap: wrap;       
     margin-top: 20px;    
@@ -152,20 +154,34 @@ input {
     color: #ffffff;
 }
 
-.tag {    
+.tag {     
     align-items: center;
     border-radius: 5px;
     color: #ffffff;
     display: flex;
-    justify-content: space-around;
     height: 37px;
+    justify-content: space-around;
+    margin-right: 15px;;
     width: 107px;
-    background-color: var(--ingredients);  
 }
 
+.tag__list {
+    display: flex;    
+}
 
+.list--disabled {
+    display: none;
+}
 .tag--appliances {
     background-color: var(--appliances);
+}
+
+.tag--ingredients {
+    background-color: var(--ingredients);
+}
+
+.tag--ustensils {
+    background-color: var(--ustensils);
 }
 
 /*===================================/
@@ -175,6 +191,7 @@ input {
 .media__content, .media__block, .media__cooking-timer, .media__heading {
     display: flex;
 }
+
 .media__content {    
     flex-wrap: wrap;
     justify-content: space-between;    
@@ -241,18 +258,18 @@ input {
         margin: auto;
     }
 
-    .filters {
+    .filters {        
         justify-content: space-between;
-        width: 550px;
+        width: 620px;
     }
 
     .filters__element {        
-        width: 170px;
+        width: 190px;
     }
 
     .media__block {
         width: 330px;               
-    } 
+    }    
 
     .media__ingredients {
         margin-right: 5px;
