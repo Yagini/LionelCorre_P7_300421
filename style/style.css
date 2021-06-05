@@ -66,16 +66,20 @@ input {
 .search {
     background-color: var(--background);
     border-radius: 5px;
-    display: flex;
+    display: flex;    
     margin-bottom: 20px;
     margin-top: 17px;       
-    padding: 24px 20px;
+    padding: 20px 20px;    
+}
+
+.search__button {
+    font-size: 1.75rem;
 }
 
 .search__input {
     background-color: var(--background); 
     text-overflow: ellipsis;
-    width: 95%;
+    flex: 1;
 }
 
 /*===================================/
@@ -101,9 +105,9 @@ input {
     margin-top: 20px;    
 }
 
-.filters__all {
+.filters__all {    
     width: 340px;
-    margin-top: 20px;   
+    margin-top: 20px;      
 }
 
 .filters__element {
@@ -134,7 +138,7 @@ input {
 }
 
 .filters__input {   
-    width: 90%;
+    width: 95%;
     color: #ffffff;       
 }
 
@@ -162,11 +166,22 @@ input {
     height: 37px;
     justify-content: space-around;
     margin-right: 15px;;
-    width: 107px;
+    margin-bottom: 15px;
+    width: auto;
+}
+
+.tag__close {
+    margin-right: 15px;
 }
 
 .tag__list {
-    display: flex;    
+    display: flex; 
+    flex-wrap: wrap;
+    width: 340px;       
+}
+
+.tag__text {
+    margin: 15px;
 }
 
 .list--disabled {
@@ -203,12 +218,24 @@ input {
     margin-bottom: 20px; 
 }
 
+.media__cooking-timer--icon {
+    margin-right: 5px;
+}
+
 .media__cooking-timer {
     flex-direction: row;    
     align-items: center;
     text-align: center; 
     justify-content: space-around; 
-    font-size: 1.125rem;  
+    font-size: 1.125rem;     
+}
+
+#media__error {
+    margin-top: 100px;
+    text-align: center;
+    font-size: 1.5rem;
+    font-family: "roboto-regular";
+    display: none;     
 }
 
 .media__heading {
@@ -256,6 +283,29 @@ input {
     body {
         width: 688px;
         margin: auto;
+    }   
+
+    #appliances__filter-list, #ingredients__filter-list, #ustensils__filter-list  {
+        position: absolute;
+        width: 190px;
+        padding: 0 20px 20px 20px;
+        border-bottom-right-radius: 5px;
+        border-bottom-left-radius: 5px;
+    }
+
+    #appliances__filter-list {
+        background-color: var(--appliances);
+        left: 255px;
+    }
+
+    #ingredients__filter-list {
+        background-color: var(--ingredients);
+        left: 40px;
+    }
+    
+    #ustensils__filter-list  {
+        background-color: var(--ustensils);
+        left: 470px;
     }
 
     .filters {        
@@ -265,11 +315,11 @@ input {
 
     .filters__element {        
         width: 190px;
-    }
+    }   
 
     .media__block {
         width: 330px;               
-    }    
+    }     
 
     .media__ingredients {
         margin-right: 5px;
@@ -280,7 +330,11 @@ input {
         height: 109px;
         overflow: hidden;
         text-overflow: ellipsis;       
-    }    
+    } 
+    
+    .filters__input {   
+        width: 90%;               
+    }
 
     .media__recipe {
         height: 190px;        
@@ -292,6 +346,9 @@ input {
         text-overflow: ellipsis;         
     }    
 
+    .tag__list {        
+        width: 620px;       
+    }
 }
 
 /* desktop 1024px */
@@ -299,6 +356,18 @@ input {
 @media only screen and (min-width: 1024px) {
     body {
         width: 850px;        
+    }
+
+    #appliances__filter-list {        
+        left: 302px;
+    }
+
+    #ingredients__filter-list {        
+        left: 87px;
+    }
+    
+    #ustensils__filter-list  {        
+        left: 517px;
     }
 
     .media__content {        
@@ -314,6 +383,10 @@ input {
         height: 178px;
     }
 
+    .tag__list {        
+        width: 850px;       
+    }
+
 } 
 
 /* desktop 1400px et + */
@@ -322,4 +395,47 @@ input {
     body {
         width: 1240px;        
     }
+    #appliances__filter-list {        
+        left: 315px;
+    }
+
+    #ingredients__filter-list {        
+        left: 100px;
+    }
+    
+    #ustensils__filter-list  {        
+        left: 530px;
+    }
+    
+    .tag__list {        
+        width: 1200px;       
+    }
 } 
+
+@media only screen and (min-width: 1920px) {
+    #appliances__filter-list {        
+        left: 547px;
+    }
+
+    #ingredients__filter-list {        
+        left: 332px;
+    }
+    
+    #ustensils__filter-list  {        
+        left: 762px;
+    } 
+}
+
+@media only screen and (min-width: 2560px) {
+    #appliances__filter-list {        
+        left: 867px;
+    }
+
+    #ingredients__filter-list {        
+        left: 652px;
+    }
+    
+    #ustensils__filter-list  {        
+        left: 1082px;
+    } 
+}

@@ -35,7 +35,7 @@
 
     <form action="" method="POST" class="filters" id="filters">
       <div class="filters__element filters__element--ingredients" id="ingredients__element">
-        <input type="text" placeholder="Ingrédients" class="filters__input filters__input--ingredients" id="ingredient__input" />
+        <input type="text" placeholder="Ingrédients" class="filters__input filters__input--ingredients" id="ingredients__input" />
         <i class="fas fa-chevron-down filters__btn" id="ingredients__btn--down"></i>
         <i class="fas fa-chevron-up filters__btn" id="ingredients__btn--up"></i>
         <div class="filters__all" id="filters__all--ingredients">
@@ -43,8 +43,8 @@
         </div>
       </div>
 
-      <div class="filters__element filters__element--appliances" id="appliance__element">
-        <input type="text" placeholder="Appareils" class="filters__input filters__input--appliances" id="appliance__input" />
+      <div class="filters__element filters__element--appliances" id="appliances__element">
+        <input type="text" placeholder="Appareils" class="filters__input filters__input--appliances" id="appliances__input" />
         <i class="fas fa-chevron-down filters__btn" id="appliances__btn--down"></i>
         <i class="fas fa-chevron-up filters__btn" id="appliances__btn--up"></i>
         <div class="filters__all " id="filters__all--appliances">
@@ -53,7 +53,7 @@
       </div>
 
       <div class="filters__element filters__element--ustensils" id="ustensils__element">
-        <input type="text" placeholder="Ustensiles" class="filters__input filters__input--ustensils" id="ustensil__input" />
+        <input type="text" placeholder="Ustensiles" class="filters__input filters__input--ustensils" id="ustensils__input" />
         <i class="fas fa-chevron-down filters__btn" id="ustensils__btn--down"></i>
         <i class="fas fa-chevron-up filters__btn" id="ustensils__btn--up"></i>
         <div class="filters__all" id="filters__all--ustensils">          
@@ -64,7 +64,9 @@
 
     <main class="media__content" id="media__content">      
       <!-- Contient tous les médias -->
+      
     </main>
+    <p class="media__error" id="media__error">Aucune recette ne correspond à vos critères... Vous pouvez chercher "tarte aux pommes, "poisson", ect</p>
     <script src="./js/index.js" type="module"></script>
   </body>
 </html>

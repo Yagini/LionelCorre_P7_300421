@@ -1,8 +1,8 @@
 import { recipes } from "./recipes.js";
 import { createMedia } from "./media.js";
-import { TagSearch } from "./tags-search.js"
+import { manageTags } from "./tags-search.js"
 
 
 createMedia(recipes)
-TagSearch(recipes)
+manageTags(recipes)
 

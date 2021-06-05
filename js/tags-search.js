@@ -1,253 +1,138 @@
-export const TagSearch = (recipes) => {
-  const appliancesList = createApplianceList(recipes);
-  const ustensilsList = createUstensilsList(recipes);
-  const ingredientsList = createIgredientsList(recipes);
-  // Fontion qui gère les Set de tag
-  addTagSet(appliancesList, ustensilsList, ingredientsList);
-
-  // fonction qui permet l'action sur les button
-  addButtonAction();
-
-  // fonction qui gère l'entrée dans les champs input
-  filterByType(appliancesList, ustensilsList, ingredientsList);
-
-  // fonction qui gère la barre des tags
-  createTag();
-
-  //tagFilter(recipes, appliancesList)
-};
-
 /**
- * Fonctions qui créent des nouveaux Set de chaque éléments 
- * puis les réinjectes dans un nouveau tableau 
+ * fonction qui va créer un dropdown pour chaque nouveau tableau 
  * @param {array} recipes 
  * @returns 
  */
-const createApplianceList = (recipes) => {
-  const appliancesList = new Set();
-  recipes.forEach((recipe) => {
-    appliancesList.add(recipe.appliance);
+export const manageTags = (recipes) => getCategories(recipes).forEach(createDropdown);
+
+/*================================================
+==                LOGIQUE                      ==
+===============================================*/
+
+/**
+ * Fontion getCategories prend le tableau recipes en paramètre
+ * const res prend  un tableau de categoryIds que l'on map en tableau clé / valeur [['appliances', newSet(), ...]]
+ * et Object.fromEntries le transforme en objet
+ * enfin Object.entries(res) tranforme l'objet res en tableau clé/valeur pour pouvoir map 
+ * Set étant un ensemble de valeur unique, on doit le réinjecter dans un tableau
+ * @param {Array} recipes 
+ * @returns 
+ */
+
+const getCategories = (recipes) => {
+  const res = Object.fromEntries(['appliances', 'ingredients', 'ustensils'].map((id) => [id, new Set()]));
+  recipes.forEach(({appliance, ingredients, ustensils}) => {
+    res.appliances.add(appliance);
+    ingredients.forEach(({ingredient}) => res.ingredients.add(ingredient));
+    ustensils.forEach((ustensil) => res.ustensils.add(ustensil));
   });
-  return [...appliancesList];
-};
-
-const createUstensilsList = (recipes) => {
-  const ustensilsList = new Set();
-  recipes.forEach((recipe) =>
-    recipe.ustensils.forEach((ustensil) => {
-      ustensilsList.add(ustensil);
-    })
-  );
-  return [...ustensilsList];
-};
-
-const createIgredientsList = (recipes) => {
-  const ingredientsList = new Set();
-  recipes.forEach((recipe) =>
-    recipe.ingredients.forEach((ingredient) => {
-      ingredientsList.add(ingredient.ingredient);
-    })
-  );
-  return [...ingredientsList];
+  return Object.entries(res).map(([id, set]) => [id, [...set]]);
 };
 
 /**
- * Fonction qui gère la partie créations des tags
- * en créant une liste unique pour chaque éléments
- * @param {Array} recipes
+ * Fontion filterInput prend en paramètre input qui
+ * renvoie une fonction filterInput qui prend en paramètre value
+ * @param {string} input 
+ * @returns 
  */
 
-const addTagSet = (appliances, ustensils, ingredients) => {
-  const applianceFilterList = document.getElementById("appliances__filter-list");
-  const ustensilFilterList = document.getElementById("ustensils__filter-list");
-  const ingredientsFilterList = document.getElementById("ingredients__filter-list");
-  applianceFilterList.innerHTML = "";
-  ustensilFilterList.innerHTML = "";
-  ingredientsFilterList.innerHTML = "";
+const filterInput = (input) => (value) => value.toLowerCase().includes(input.toLowerCase());
 
-  for (const appliance of appliances) {
-    const appliancesList = document.createElement("li");
-    appliancesList.classList.add("appliances__list");
-    applianceFilterList.appendChild(appliancesList);
-    appliancesList.textContent = appliance;
-  }
+/*================================================
+==                 TEMPLATE                    ==
+===============================================*/
+
+/**
+ * Fonction qui gère la création des templates de chaque dropdown
+ * @param {array} categoryID 
+ * @param {arrays} values
+ */
+
+const createDropdown = ([categoryId, values]) => {
+  const list = document.getElementById(`${categoryId}__filter-list`);
+  const listWrapper = document.getElementById(`filters__all--${categoryId}`);
+  const btnDown = document.getElementById(`${categoryId}__btn--down`);
+  const btnUp = document.getElementById(`${categoryId}__btn--up`);
+  const input = document.getElementById(`${categoryId}__input`);
+
+  /**
+   * Fonction qui gère la visibilité des dropdown en modifiant leur style
+   * en utilisant des opérateurs ternaire
+   */
+  const setDisplay = (visibility) => () => {
+    listWrapper.style.display = visibility ? 'block' : 'none';
+    btnUp.style.display = visibility ? 'block' : 'none';
+    btnDown.style.display = visibility ? 'none' : 'block';
+  };
+
+  /**
+   * Fonction qui prend l'ensemble des tableaux d'ingredients, appliances, ustensils
+   * qui va mettre à jour les dropdowns en créant des listes pour chaque object du tableau
+   * @param {arrays} values 
+   */
+  const update = (values) => {
+    list.innerHTML = '';
+    values.map((value) => {
+      const item = document.createElement('li');
+      item.classList.add(`${categoryId}__list`);
+      item.textContent = value;
+      item.addEventListener('click', createTag(categoryId, item));
+      list.appendChild(item);
+    });
+  };
+
+  /** 
+   * Methode qui écoute les events sur les boutons et 
+   * les champs inputs des dropdowns
+   */
   
-  for (const ustensil of ustensils) {
-    const ustensils = document.createElement("li");
-    ustensils.classList.add("ustensils__list");
-    ustensilFilterList.appendChild(ustensils);
-    ustensils.textContent = ustensil;
-  }
-
-  for (const ingredient of ingredients) {
-    const ingredients = document.createElement("li");
-    ingredients.classList.add("ingredients__list");
-    ingredientsFilterList.appendChild(ingredients);
-    ingredients.textContent = ingredient;
-  }
+  btnDown.addEventListener('click', setDisplay(true));
+  btnUp.addEventListener('click', setDisplay(false));
+  input.addEventListener('keyup', () => update(values.filter(filterInput(input.value))));
+  update(values);  
 };
 
-/**
- * Fonction qui gère le listener sur les boutons chevron
- * créer un menu déroulant
- */
-
-const addButtonAction = () => {
-  const applianceBtnDown = document.getElementById("appliances__btn--down");
-  const applianceBtnUp = document.getElementById("appliances__btn--up");
-  const applianceFilters = document.getElementById("filters__all--appliances");
-  applianceBtnDown.addEventListener("click", () => {
-    applianceFilters.style.display = "block";
-    applianceBtnDown.style.display = "none";
-    applianceBtnUp.style.display = "block";
-  });
-  applianceBtnUp.addEventListener("click", () => {
-    applianceFilters.style.display = "none";
-    applianceBtnDown.style.display = "block";
-    applianceBtnUp.style.display = "none";
-  });
-
-  const ingredientBtnDown = document.getElementById("ingredients__btn--down");
-  const ingredientBtnUp = document.getElementById("ingredients__btn--up");
-  const ingredientFilters = document.getElementById("filters__all--ingredients");
-  ingredientBtnDown.addEventListener("click", () => {
-    ingredientFilters.style.display = "block";
-    ingredientBtnDown.style.display = "none";
-    ingredientBtnUp.style.display = "block";
-  });
-  ingredientBtnUp.addEventListener("click", () => {
-    ingredientFilters.style.display = "none";
-    ingredientBtnDown.style.display = "block";
-    ingredientBtnUp.style.display = "none";
-  });
-
-  const ustensilBtnDown = document.getElementById("ustensils__btn--down");
-  const ustensilBtnUp = document.getElementById("ustensils__btn--up");
-  const ustensilFilters = document.getElementById("filters__all--ustensils");  
-  ustensilBtnDown.addEventListener("click", () => {
-    ustensilFilters.style.display = "block";
-    ustensilBtnDown.style.display = "none";
-    ustensilBtnUp.style.display = "block";    
-  });
-  ustensilBtnUp.addEventListener("click", () => {
-    ustensilFilters.style.display = "none";
-    ustensilBtnDown.style.display = "block";
-    ustensilBtnUp.style.display = "none";
-  });
-};
 
 /**
- * Fonction pour l'ajout des tags aux clics dans la barre de tag
- * et ferme les tags aux clics
+ * Fonction qui gère la création des tags épinglés 
+ * @param {string} categoryId 
+ * @param {object} item 
+ * @returns 
  */
-
-const createTag = () => {
-  const appliancesList = document.querySelectorAll(".appliances__list");
-  const ustensilsList = document.querySelectorAll(".ustensils__list");
-  const ingredientsList = document.querySelectorAll(".ingredients__list");  
-
-  appliancesList.forEach((appliance) => {
-    appliance.addEventListener("click", () => {
-      createTagDisplay(appliance, "tag--appliances");
-      appliance.classList.add("list--disabled");
-    });
-  });
-
-  ustensilsList.forEach((ustensil) => {
-    ustensil.addEventListener("click", () => {
-      createTagDisplay(ustensil, "tag--ustensils");
-      ustensil.classList.add("list--disabled");      
-    });
-  });  
-
-  ingredientsList.forEach((ingredient) => {
-    ingredient.addEventListener("click", () => {
-      createTagDisplay(ingredient, "tag--ingredients");
-      ingredient.classList.add("list--disabled");
-    });
-  });  
-  
-};
-
-/**
- * Fonction de création du template pour les tags qui sont épinglés
- * @param {array} item 
- * @param {string} className 
- */
-
-const createTagDisplay = (item, className) => {
-  const itemText = item.textContent;
-  const tagList = document.querySelector(".tag__list");
-  const tag = document.createElement("div");
-  tag.classList.add("tag", className);
-  tag.setAttribute("id", "tag");
-  const tagText = document.createElement("p");
-  tagText.classList.add("tag__text");
-  tagText.setAttribute("id", "tag__text");
-  tagText.textContent = itemText;
-  const tagIcon = document.createElement("i");
-  tagIcon.classList.add("far", "fa-times-circle", "tag__close");
-  tagIcon.addEventListener("click", () => {
-    tag.style.display = "none";
+const createTag = (categoryId, item) => () => {  
+  const tagList = document.querySelector('.tag__list');
+  item.classList.add('list--disabled');
+  const tag = document.createElement('div');
+  tag.classList.add('tag', `tag--${categoryId}`);
+  const tagText = document.createElement('p');
+  tagText.classList.add('tag__text');
+  tagText.textContent = item.textContent;
+  const tagIcon = document.createElement('i');
+  tagIcon.classList.add('far', 'fa-times-circle', 'tag__close');
+  tagIcon.addEventListener('click', () => {
+    tag.style.display = 'none'
+    item.classList.remove('list--disabled');
   });
   tag.appendChild(tagText);
   tag.appendChild(tagIcon);
   tagList.appendChild(tag);
 };
 
-/**
- * Fonction qui gère les entrées dans les champs inputs
- * recherche par tags
- * @param {Array} recipes
- */
+ 
 
-const filterByType = (appliances, ustensils, ingredients) => {
-  const applianceInput = document.getElementById("appliance__input");
-  const ustensilInput = document.getElementById("ustensil__input");
-  const ingredientInput = document.getElementById("ingredient__input");
-  applianceInput.addEventListener("keyup", () =>
-    addTagSet(applianceFilter(appliances, applianceInput.value.toLowerCase()))
-  )
-  ustensilInput.addEventListener("keyup", () =>
-    addTagSet(ustensilFilter(ustensils, ustensilInput.value.toLowerCase()))
-  )
-  ingredientInput.addEventListener("keyup", () =>
-    addTagSet(ingredientFilter(ingredients, ustensilInput.value.toLowerCase()))
-  );
-};
 
-const applianceFilter = (appliances, input) => {
-  const filter = appliances.filter((appliance) => {
-    return appliance.toLowerCase().includes(input);
-  });
-  return filter;
-};
 
-const ustensilFilter = (ustensils, input) => {
-  const filter = ustensils.filter((ustensil) => {
-    return ustensil.toLowerCase().includes(input);
-  });
-  return filter;
-};
 
-const ingredientFilter = (ingredients, input) => {
-  const filter = ingredients.filter((ingredient) => {
-    return ingredient.toLowerCase().includes(input);
-  });
-  return filter;
-};
 
-// Fontion qui trie les dropdowns quand on tape dans la barre de recherche principale
-/*const tagFilter = (recipes, appliances) => {
-  const searchInput = document.getElementById("search");
-  searchInput.addEventListener("keyup", () => filterByType(getResults(recipes, appliances.value.toLowerCase())));
-}
 
-const getResults = (recipes, input) => {     
-  const filteredMedia = recipes.filter((recipe) => {
-    return(
-      recipe.appliance.toLowerCase().includes(input)  
-    )    
-  });
-  return filteredMedia;  
-};*/
+
+
+
+
+
+
+
+
+
+
+
