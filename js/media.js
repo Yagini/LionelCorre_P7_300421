@@ -1,9 +1,8 @@
 import { manageTags } from "./tags-search.js";
 
 export const createMedia = (recipes) => {
-  addMedia(recipes);
-  search(recipes);
-  //search2(recipes);
+  addMedia(recipes);  
+  search2(recipes);
 };
 
 /* =======================================
@@ -17,42 +16,34 @@ export const createMedia = (recipes) => {
  * @param {Array} recipes
  */
 
-const search = (recipes) => {
-  const searchInput = document.getElementById("search");
-
+ const search2 = (recipes) => {
+  const searchInput = document.getElementById("search");  
   searchInput.addEventListener("keyup", () => {
     const filteredRecipes = getResults(recipes, searchInput.value.toLowerCase());
     addMedia(filteredRecipes);
     manageTags(filteredRecipes);
-  });
+  });     
 };
 
 /**
- * Fonction qui se charge de boucler dans les éléments du tableaux (name, ingredients, description)
- * et compare les éléments du tableau avec l'entrée du champ input. Puis stock les informations
- * dans un nouveau tableau results []
+ * Fonction qui se charge de filtrer dans les éléments du tableaux (name, ingredients, description).
+ * La méthode filter créer et retourne un nouveau tableau contenant tous les éléments du tableau d'origine
+ * grâce a l'appelle de la fonction callback
  * @param {array} recipes
  * @param {string} input
  * @returns
- */
+ */ 
 
-const getResults = (recipes, input) => {
-  if (input.length < 3) return recipes;
-  const results = [];
-  for (let i = 0; i < recipes.length; i++) {
-    const { description, ingredients, name } = recipes[i];
-    const isInName = name.toLowerCase().includes(input);
-    const isInDescription = description.toLowerCase().includes(input);
-    let isInIngredients = false;
-    for (let j = 0; j < ingredients.length; j++)
-      if (ingredients[j].ingredient.toLowerCase().includes(input)) {
-        isInIngredients = true;
-      }
-    if (isInName || isInDescription || isInIngredients) {
-      results.push(recipes[i]);
-    }
-  }
-  return results;
+const getResults = (recipes, input) => {  
+  if (input.length < 3) return recipes;  
+  const filteredMedia = recipes.filter((recipe) => {
+    return(      
+      recipe.name.toLowerCase().includes(input) || 
+      recipe.description.toLowerCase().includes(input) ||
+      recipe.ingredients.some((ingredient) => ingredient.ingredient.toLowerCase().includes(input))
+    )    
+  });
+  return filteredMedia;  
 };
 
 /* =======================================
