@@ -13,8 +13,7 @@
     src: url("./font/Lato-Regular.ttf") format("truetype");
 }
 @font-face {
-    font-family: "lato-bold";
-    font-style: bold;
+    font-family: "lato-bold";    
     font-weight: 700;
     src: url("./font/Lato-Bold.ttf") format("truetype");
 }

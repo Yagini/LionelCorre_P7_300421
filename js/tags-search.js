@@ -59,10 +59,10 @@ const createDropdown = ([categoryId, values]) => {
    * Fonction qui gère la visibilité des dropdown en modifiant leur style
    * en utilisant des opérateurs ternaire
    */
-  const setDisplay = (visibility) => () => {
-    listWrapper.style.display = visibility ? 'block' : 'none';
-    btnUp.style.display = visibility ? 'block' : 'none';
-    btnDown.style.display = visibility ? 'none' : 'block';
+  const setDisplay = (flag) => () => {
+    listWrapper.style.display = flag ? 'block' : 'none';
+    btnUp.style.display = flag ? 'block' : 'none';
+    btnDown.style.display = flag ? 'none' : 'block';
   };
 
   /**
