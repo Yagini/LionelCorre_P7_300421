@@ -1,27 +1,35 @@
+import { recipes } from './recipes.js';
+
+export let recipesFilteredByInput = recipes;
+export let recipesFilteredByTags = recipesFilteredByInput;
+let tags = { appliances: [], ingredients: [], ustensils: [] }; 
+
 /**
  * fonction qui va créer un dropdown pour chaque nouveau tableau 
  * @param {array} recipes 
  * @returns 
  */
-export const manageTags = (recipes) => getCategories(recipes).forEach(createDropdown);
+export const manageTags = (recipes, updateAll) => {
+  recipesFilteredByInput = recipes;
+  getCategories().forEach(createDropdown(updateAll))
+};
 
 /*================================================
 ==                LOGIQUE                      ==
 ===============================================*/
 
 /**
- * Fontion getCategories prend le tableau recipes en paramètre
- * const res prend  un tableau de categoryIds que l'on map en tableau clé / valeur [['appliances', newSet(), ...]]
- * et Object.fromEntries le transforme en objet
+ * const res prend un tableau de categoryIds que l'on map en tableau clé / valeur [['appliances', newSet(), ...]]
+ * et Object.fromEntries le transforme en objet pour pouvoir être manipulé
  * enfin Object.entries(res) tranforme l'objet res en tableau clé/valeur pour pouvoir map 
- * Set étant un ensemble de valeur unique, on doit le réinjecter dans un tableau
- * @param {Array} recipes 
+ * l'objet Set étant un ensemble de valeur unique, on doit donc réinjecter ses valeurs dans un tableau
+ *  
  * @returns 
  */
 
-const getCategories = (recipes) => {
-  const res = Object.fromEntries(['appliances', 'ingredients', 'ustensils'].map((id) => [id, new Set()]));
-  recipes.forEach(({appliance, ingredients, ustensils}) => {
+const getCategories = () => { 
+  const res = Object.fromEntries(['appliances', 'ingredients', 'ustensils'].map((id) => [id, new Set()]));  
+  recipesFilteredByInput.forEach(({appliance, ingredients, ustensils}) => {
     res.appliances.add(appliance);
     ingredients.forEach(({ingredient}) => res.ingredients.add(ingredient));
     ustensils.forEach((ustensil) => res.ustensils.add(ustensil));
@@ -32,7 +40,11 @@ const getCategories = (recipes) => {
 /**
  * Fontion filterInput prend en paramètre input qui
  * renvoie une fonction filterInput qui prend en paramètre value
- * @param {string} input 
+ * cette syntaxe permet de simplifié l'écriture et la lecture
+ * si on sait que l'on doit utilisé des fonctions avec map/filter
+ * array.filter(func(input)) au lieu de array.filter((value) => func(input)(value)
+ * @param {string} input
+ * @param {string} value
  * @returns 
  */
 
@@ -44,11 +56,12 @@ const filterInput = (input) => (value) => value.toLowerCase().includes(input.toL
 
 /**
  * Fonction qui gère la création des templates de chaque dropdown
- * @param {array} categoryID 
+ * @param {function} updateAll
+ * @param {string, key} categoryID 
  * @param {arrays} values
  */
 
-const createDropdown = ([categoryId, values]) => {
+const createDropdown = (updateAll) => ([categoryId, values]) => {
   const list = document.getElementById(`${categoryId}__filter-list`);
   const listWrapper = document.getElementById(`filters__all--${categoryId}`);
   const btnDown = document.getElementById(`${categoryId}__btn--down`);
@@ -59,10 +72,10 @@ const createDropdown = ([categoryId, values]) => {
    * Fonction qui gère la visibilité des dropdown en modifiant leur style
    * en utilisant des opérateurs ternaire
    */
-  const setDisplay = (visibility) => () => {
-    listWrapper.style.display = visibility ? 'block' : 'none';
-    btnUp.style.display = visibility ? 'block' : 'none';
-    btnDown.style.display = visibility ? 'none' : 'block';
+  const setDisplay = (flag) => () => {
+    listWrapper.style.display = flag ? 'block' : 'none';
+    btnUp.style.display = flag ? 'block' : 'none';
+    btnDown.style.display = flag ? 'none' : 'block';
   };
 
   /**
@@ -75,11 +88,18 @@ const createDropdown = ([categoryId, values]) => {
     values.map((value) => {
       const item = document.createElement('li');
       item.classList.add(`${categoryId}__list`);
+      //si le tag contient la valeur un style est appliqué pour qu'il display "none" du dropdown
+      if (tags[categoryId].includes(value)) item.classList.add(`list--disabled`);
       item.textContent = value;
-      item.addEventListener('click', createTag(categoryId, item));
+      item.addEventListener('click', () => {
+        addTag(categoryId, value);
+        createTag(categoryId, item, updateAll);
+        recipesFilteredByTags = filterByTags();
+        updateAll(recipesFilteredByInput, recipesFilteredByTags);
+      });
       list.appendChild(item);
     });
-  };
+  };  
 
   /** 
    * Methode qui écoute les events sur les boutons et 
@@ -92,16 +112,55 @@ const createDropdown = ([categoryId, values]) => {
   update(values);  
 };
 
-
 /**
- * Fonction qui gère la création des tags épinglés 
- * @param {string} categoryId 
- * @param {object} item 
+ * Fonction addTag va stocker dans l'objet clé valeur initialisé à vide avec les nouvelles valeur reçu
+ * Fonction RemoveTag va enlever de l'objet clé valeur si il y a une différence entre la value reçu et la valeur filtrée
+ * @param {string, key} categoryId 
+ * @param {string} value 
  * @returns 
  */
-const createTag = (categoryId, item) => () => {  
+const addTag = (categoryId, value) => tags = {...tags, [categoryId]: [...tags[categoryId], value]};
+const removeTag = (categoryId, value) => tags = {...tags, [categoryId]: tags[categoryId].filter((tagValue)=>tagValue !== value)};
+
+/**
+ * Fonction qui va filtrer le tableau de recette qui à déja été filtré par rapport à l'input du champ de recherche.
+ * prend toutes les données de l'objet clé valeur tags et toutes les valeurs de l'array values pour les filtrés 
+ * en catégorie 
+ * @returns 
+ */
+const filterByTags = () => 
+ recipesFilteredByInput.filter((recipe) => 
+    Object.entries(tags).every(([categoryId, values]) => 
+      values.every((value) => filterRecipeByCategoryValue(categoryId, value, recipe))))
+
+/**
+ * les fonctions vont traiter les informations stockées dans le tableau de recette filtré avec la valeur entrée si
+ * égal ou inclus puis chercher une équivalence entre categoryId et le string ('apliances', 'ingredients', 'ustensils')
+ * et return la foncion correspondante 
+ * @param {array} recipe 
+ * @param {string} value 
+ * @returns 
+ */
+const filterRecipeByAppliance = (recipe, value) => recipe.appliance.toLowerCase() === value.toLowerCase(); 
+const filterRecipeByIngredient = (recipe, value) => recipe.ingredients.map(({ingredient}) => ingredient.toLowerCase().includes(value.toLowerCase())); 
+const filterRecipeByUstensil = (recipe, value) => recipe.ustensils.map((ustensil) => ustensil.toLowerCase()).includes(value.toLowerCase());
+const filterRecipeByCategoryValue = (categoryId, value, recipe) => {
+  if (categoryId === 'appliances') return filterRecipeByAppliance(recipe, value);
+  if (categoryId === 'ingredients') return filterRecipeByIngredient(recipe, value);
+  if (categoryId === 'ustensils') return filterRecipeByUstensil(recipe, value);
+}
+
+
+/**
+ * Fonction qui gère la création des tags épinglés
+ * actualise les dropdowns quand il y a un click sur la fermeture 
+ * @param {string} categoryId 
+ * @param {object} item 
+ * 
+ * @returns 
+ */
+const createTag = (categoryId, item, updateAll) => {  
   const tagList = document.querySelector('.tag__list');
-  item.classList.add('list--disabled');
   const tag = document.createElement('div');
   tag.classList.add('tag', `tag--${categoryId}`);
   const tagText = document.createElement('p');
@@ -110,8 +169,10 @@ const createTag = (categoryId, item) => () => {
   const tagIcon = document.createElement('i');
   tagIcon.classList.add('far', 'fa-times-circle', 'tag__close');
   tagIcon.addEventListener('click', () => {
+    removeTag(categoryId, item.textContent);
+    recipesFilteredByTags = filterByTags();
+    updateAll(recipesFilteredByInput, recipesFilteredByTags);
     tag.style.display = 'none'
-    item.classList.remove('list--disabled');
   });
   tag.appendChild(tagText);
   tag.appendChild(tagIcon);

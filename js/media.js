@@ -1,9 +1,11 @@
-import { manageTags } from "./tags-search.js";
+import { manageTags } from './tags-search.js';
 
 export const createMedia = (recipes) => {
   addMedias(recipes);  
   search2(recipes);
 };
+
+
 
 /* =======================================
 ==              LOGIQUE                ==
@@ -17,15 +19,26 @@ export const createMedia = (recipes) => {
  */
 
  const search2 = (recipes) => {
-  const searchInput = document.getElementById("search");
-  const error = document.getElementById("media__error");  
-  searchInput.addEventListener("keyup", () => {     
-    const filteredRecipes = getResults(recipes, searchInput.value.toLowerCase());
-    addMedias(filteredRecipes);
-    manageTags(filteredRecipes);
-    error.style.display = filteredRecipes.length === 0 ? 'block' : 'none';
+  const searchInput = document.getElementById("search"); 
+  const error = document.getElementById("media__error") ;
+  searchInput.addEventListener("keyup", () => {
+    const recipesFilteredByInput = getResults(recipes, searchInput.value.toLowerCase());
+    updateAll(recipesFilteredByInput);
+    error.style.display = recipesFilteredByInput.length === 0 ? "block" : "none"
   });     
 };
+
+/**
+ * le tableau update all permet de gérer la partie template soit il prend 
+ * @param {array} recipesFilteredByInput premier niveau de filtre 
+ * @param {array} recipesFilteredByTags deuxieme niveau de filtre
+ */
+
+const updateAll = (recipesFilteredByInput, recipesFilteredByTags = recipesFilteredByInput) => {
+  addMedias(recipesFilteredByTags)
+  manageTags(recipesFilteredByInput, updateAll)
+}
+
 
 /**
  * Fonction qui se charge de filtrer dans les éléments du tableaux (name, ingredients, description).
@@ -61,11 +74,11 @@ const addMedias = (recipes) => {
   const mediaContent = document.querySelector(".media__content");
   mediaContent.innerHTML = "";
   recipes.forEach(addMedia);
-}
+};
 
 const addMedia = (recipe) => {
   const mediaContent = document.querySelector(".media__content");
-  
+
   const mediaBlock = document.createElement("article");
   mediaBlock.classList.add("media__block");
 
