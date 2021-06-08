@@ -142,7 +142,7 @@ const filterByTags = () =>
  * @returns 
  */
 const filterRecipeByAppliance = (recipe, value) => recipe.appliance.toLowerCase() === value.toLowerCase(); 
-const filterRecipeByIngredient = (recipe, value) => recipe.ingredients.map(({ingredient}) => ingredient.toLowerCase().includes(value.toLowerCase())); 
+const filterRecipeByIngredient = (recipe, value) => recipe.ingredients.map(({ingredient}) => ingredient.toLowerCase()).includes(value.toLowerCase()); 
 const filterRecipeByUstensil = (recipe, value) => recipe.ustensils.map((ustensil) => ustensil.toLowerCase()).includes(value.toLowerCase());
 const filterRecipeByCategoryValue = (categoryId, value, recipe) => {
   if (categoryId === 'appliances') return filterRecipeByAppliance(recipe, value);
